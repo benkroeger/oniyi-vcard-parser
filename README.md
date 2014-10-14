@@ -8,16 +8,11 @@
 Install the module with: `npm install oniyi-vcard-parser`
 
 ```js
-var oniyi-vcard-parser = require('oniyi-vcard-parser');
-oniyi-vcard-parser.awesome(); // "awesome"
-```
+var oniyiVcardParser = require('oniyi-vcard-parser');
+oniyiVcardParser.toObject(); // "awesome"
+oniyiVcardParser.toVcard(); // "awesome"
 
-Install with cli command
-
-```sh
-$ npm install -g oniyi-vcard-parser
-$ oniyi-vcard-parser --help
-$ oniyi-vcard-parser --version
+var vCardParser = new oniyiVcardParser.factory(options)
 ```
 
 
@@ -40,5 +35,5 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## License
 
-Copyright (c) 2014 Benjamin Kroeger  
+Copyright (c) 2014 Benjamin Kroeger
 Licensed under the MIT license.
