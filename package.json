@@ -25,7 +25,9 @@
     "parsing"
   ],
   "dependencies": {
-    "bk-utils": "benkroeger/bk-utils"
+    "debug": "^2.1.0",
+    "lodash": "~2.4.1",
+    "prototypes": "^0.3.1"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
