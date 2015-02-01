@@ -8,11 +8,20 @@
 
 'use strict';
 
-var _ = require('lodash');
+// node core
+// none
+
+// 3rd party
 require('prototypes');
 
-var debug = require('debug'),
-  moduleName = 'oniyi-vcard-parser';
+var _ = require('lodash'),
+	debug = require('debug');
+
+// internal dependencies
+// none
+
+// variables and functions
+var moduleName = 'oniyi-vcard-parser';
 
 var logError = debug(moduleName + ':error');
 // set this namespace to log via console.error

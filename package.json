@@ -1,42 +1,35 @@
 {
   "name": "oniyi-vcard-parser",
-  "version": "0.0.0",
-  "main": "lib/oniyi-vcard-parser.js",
-  "description": "a helper to parse vcard strings into JSON objects and back",
-  "homepage": "https://github.com/benkroeger/oniyi-vcard-parser",
-  "bugs": "https://github.com/benkroeger/oniyi-vcard-parser/issues",
+  "version": "0.0.1",
+  "description": "A vcard to JSON and back parser",
   "author": {
     "name": "Benjamin Kroeger",
     "email": "benjamin.kroeger@gmail.com"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/benkroeger/oniyi-vcard-parser"
-  },
+  "repository": "benkroeger/oniyi-vcard-parser",
   "license": "MIT",
   "files": [
-    "lib"
+    "index.js"
   ],
   "keywords": [
     "oniyi-vcard-parser",
-    "vcard",
     "oniyi",
-    "utils",
-    "parsing"
+    "vcard",
+    "parser"
   ],
   "dependencies": {
-    "debug": "^2.1.0",
-    "lodash": "~2.4.1",
-    "prototypes": "^0.3.1"
+    "debug": "^2.1.1",
+    "lodash": "^3.0.1"
   },
   "devDependencies": {
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-nodeunit": "^0.3.3",
+    "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-watch": "^0.6.1",
-    "load-grunt-tasks": "^0.4.0",
-    "time-grunt": "^0.3.1",
-    "grunt-mocha-cli": "^1.9.0",
-    "jshint-stylish": "^0.2.0"
+    "load-grunt-tasks": "^1.0.0",
+    "time-grunt": "^1.0.0",
+    "grunt-mocha-cli": "^1.11.0",
+    "jshint-stylish": "^1.0.0"
   },
   "scripts": {
     "test": "grunt"

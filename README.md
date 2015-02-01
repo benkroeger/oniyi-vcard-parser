@@ -1,39 +1,32 @@
-#  [![Build Status](https://secure.travis-ci.org/benkroeger/oniyi-vcard-parser.png?branch=master)](http://travis-ci.org/benkroeger/oniyi-vcard-parser)
+#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-url]][daviddm-image]
 
-> a helper to parse vcard strings into JSON objects and back
+> A vcard to JSON and back parser
 
 
-## Getting Started
+## Install
 
-Install the module with: `npm install oniyi-vcard-parser`
-
-```js
-var oniyiVcardParser = require('oniyi-vcard-parser');
-oniyiVcardParser.toObject(); // "awesome"
-oniyiVcardParser.toVcard(); // "awesome"
-
-var vCardParser = new oniyiVcardParser.factory(options)
+```sh
+$ npm install --save oniyi-vcard-parser
 ```
 
 
+## Usage
 
+```js
+var oniyi-vcard-parser = require('oniyi-vcard-parser');
 
-## Documentation
-
-_(Coming soon)_
-
-
-## Examples
-
-_(Coming soon)_
-
-
-## Contributing
-
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com).
+oniyi-vcard-parser('Rainbow');
+```
 
 
 ## License
 
-Copyright (c) 2014 Benjamin Kroeger
-Licensed under the MIT license.
+MIT © [Benjamin Kroeger]()
+
+
+[npm-url]: https://npmjs.org/package/oniyi-vcard-parser
+[npm-image]: https://badge.fury.io/js/oniyi-vcard-parser.svg
+[travis-url]: https://travis-ci.org/benkroeger/oniyi-vcard-parser
+[travis-image]: https://travis-ci.org/benkroeger/oniyi-vcard-parser.svg?branch=master
+[daviddm-url]: https://david-dm.org/benkroeger/oniyi-vcard-parser.svg?theme=shields.io
+[daviddm-image]: https://david-dm.org/benkroeger/oniyi-vcard-parser
