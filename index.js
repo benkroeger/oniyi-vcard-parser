@@ -15,7 +15,7 @@
 require('prototypes');
 
 var _ = require('lodash'),
-	debug = require('debug');
+  debug = require('debug');
 
 // internal dependencies
 // none
@@ -104,9 +104,9 @@ var defaults = {
 function VCardParser(options) {
   options = options || {};
   this._mappings = {};
-  this._mappings.toJSON = _.merge(defaults.vCardToJSONAttributeMapping, options.vCardToJSONAttributeMapping);
-  this._complexJSONAttributes = _.merge(defaults.complexJSONAttributes, options.complexJSONAttributes);
-  this._mappings.toVcard = _.transform(this._mappings.toJSON, function(result, vCardAttrName, JSONAttrName) {
+  this._mappings.toJSON = _.merge({}, defaults.vCardToJSONAttributeMapping, options.vCardToJSONAttributeMapping);
+  this._complexJSONAttributes = _.merge({}, defaults.complexJSONAttributes, options.complexJSONAttributes);
+  this._mappings.toVcard = _.transform(this._mappings.toJSON, function(result, JSONAttrName, vCardAttrName) {
     if (_.isString(JSONAttrName)) {
       result[JSONAttrName] = vCardAttrName;
     }
@@ -193,7 +193,8 @@ VCardParser.prototype.toVcard = function(jsonObj, validAttributes) {
   var self = this;
   // define the vCard beginning
   var vCardArr = ['BEGIN:VCARD', 'VERSION:2.1'];
-  validAttributes = validAttributes || self._mappings.toVcard;
+  validAttributes = Array.isArray(validAttributes) ? validAttributes : _.keys(self._mappings.toVcard);
+  
   _.forOwn(jsonObj, function(JSONAttrValue, JSONAttrName) {
     // take only those profile fields that are configured to be editable (information coming from users service document)
     if (validAttributes.indexOf(JSONAttrName) > -1 && _.isString(self._mappings.toVcard[JSONAttrName])) {
