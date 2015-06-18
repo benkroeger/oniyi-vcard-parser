@@ -69,7 +69,7 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
   vCardStr.split('\n').forEach(function(vCardLine) {
     var valid = false;
     _.forOwn(self._mappings.toJSON, function(JSONAttrName, vCardAttrName) {
-      if (vCardLine.startsWith(vCardAttrName)) {
+      if (vCardLine.indexOf(vCardAttrName) === 0) {
         valid = true;
         if (_.isString(JSONAttrName) && (JSONAttrName.length > 0)) {
           validVCardAttributes.push(vCardLine);
