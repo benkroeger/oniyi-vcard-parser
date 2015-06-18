@@ -9,96 +9,24 @@
 'use strict';
 
 // node core
-// none
+var util = require('util');
 
 // 3rd party
-require('prototypes');
-
-var _ = require('lodash'),
-  debug = require('debug');
+var _ = require('lodash');
 
 // internal dependencies
 // none
 
 // variables and functions
-var moduleName = 'oniyi-vcard-parser';
-
-var logError = debug(moduleName + ':error');
-// set this namespace to log via console.error
-logError.log = console.error.bind(console); // don't forget to bind to console!
-
-var logWarn = debug(moduleName + ':warn');
-// set all output to go via console.warn
-logWarn.log = console.warn.bind(console);
-
-var logDebug = debug(moduleName + ':debug');
-// set all output to go via console.warn
-logDebug.log = console.warn.bind(console);
-
 var defaults = {
   // use this object to map vCard field names to editableField names. A mapping to "false" will ignore the vCard field while parsing to JSON
   vCardToJSONAttributeMapping: {
-    'ADR;WORK': 'workLocation',
-    'AGENT;VALUE=X_PROFILE_UID': false,
     'BEGIN': false,
-    'CATEGORIES': 'tags',
-    'EMAIL;INTERNET': 'email',
-    'EMAIL;X_GROUPWARE_MAIL': 'groupwareEmail',
     'END': false,
-    'FN': 'displayName',
-    'HONORIFIC_PREFIX': 'courtesyTitle',
-    'N': 'names',
-    'NICKNAME': 'preferredFirstName',
-    'ORG': 'organizationTitle',
-    'PHOTO;VALUE=URL': 'photo',
-    'REV': 'lastUpdate',
-    'ROLE': 'employeeTypeDesc',
-    'SOUND;VALUE=URL': 'pronounciation',
-    'TEL;CELL': 'mobileNumber',
-    'TEL;FAX': 'faxNumber',
-    'TEL;PAGER': 'ipTelephoneNumber',
-    'TEL;WORK': 'telephoneNumber',
-    'TEL;X_IP': 'ipTelephoneNumber',
-    'TITLE': 'jobResp',
-    'TZ': 'timezone',
-    'UID': false,
-    'URL': 'url',
-    'VERSION': false,
-    'X_ALTERNATE_LAST_NAME': 'alternateLastname',
-    'X_BLOG_URL;VALUE=URL': 'blogUrl',
-    'X_BUILDING': 'bldgId',
-    'X_COUNTRY_CODE': 'countryCode',
-    'X_DEPARTMENT_NUMBER': 'deptNumber',
-    'X_DEPARTMENT_TITLE': 'deptTitle',
-    'X_DESCRIPTION': 'description',
-    'X_EMPLOYEE_NUMBER': 'employeeNumber',
-    'X_EMPTYPE': 'employeeTypeCode',
-    'X_EXPERIENCE': 'experience',
-    'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID': 'extattr',
-    'X_FLOOR': 'floor',
-    'X_IS_MANAGER': 'isManager',
-    'X_LCONN_USERID': 'userid',
-    'X_MANAGER_UID': 'managerUid',
-    'X_NATIVE_FIRST_NAME': 'nativeFirstName',
-    'X_NATIVE_LAST_NAME': 'nativeLastName',
-    'X_OFFICE_NUMBER': 'officeName',
-    'X_ORGANIZATION_CODE': 'orgId',
-    'X_PAGER_ID': 'pagerId',
-    'X_PAGER_PROVIDER': 'pagerServiceProvider',
-    'X_PAGER_TYPE': 'pagerType',
-    'X_PREFERRED_LANGUAGE': 'preferredLanguage',
-    'X_PREFERRED_LAST_NAME': 'preferredLastName',
-    'X_PROFILE_KEY': 'key',
-    'X_PROFILE_TYPE': 'profileType',
-    'X_PROFILE_UID': 'uid',
-    'X_SHIFT': false,
-    'X_WORKLOCATION_CODE': 'workLocationCode'
+    'VERSION': false
   },
   // use this object to define complex vCard fields; meaning those whos technical values consist more than one logical value
-  complexJSONAttributes: {
-    workLocation: ['skip_1', 'skip_2', 'address_1', 'address_2', 'city', 'state', 'postal_code' /*, 'country' Country is not implemented in Profiles API yet*/ ],
-    names: ['surname', 'givenName']
-  }
+  complexJSONAttributes: {}
 };
 
 function VCardParser(options) {
@@ -111,6 +39,15 @@ function VCardParser(options) {
       result[JSONAttrName] = vCardAttrName;
     }
   });
+}
+
+// Debugging
+VCardParser.debug = process.env.NODE_DEBUG && /\boniyi-locker\b/.test(process.env.NODE_DEBUG);
+
+function debug() {
+  if (VCardParser.debug) {
+    console.error('VCardParser %s', util.format.apply(util, arguments));
+  }
 }
 
 /*
@@ -162,7 +99,7 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
             var extattrVal = (vCardRex[2].split('X_EXTENSION_VALUE:')[1]).split(';')[0];
             jsonObj.extattr[extattrName] = (encode) ? encodeURIComponent(extattrVal) : extattrVal;
           } catch (e) {
-            logWarn('Failed to parse extension-attribute: %s', vCardEntry);
+            debug('Failed to parse extension-attribute: %s', vCardEntry);
           }
         } else if (self._complexJSONAttributes[JSONAttrName]) {
           // this vCardAttribute is a complex field
@@ -216,16 +153,4 @@ VCardParser.prototype.toVcard = function(jsonObj, validAttributes) {
   return vCardStr;
 };
 
-var instance = new VCardParser();
-
-exports.toObject = function(vCardStr, encode) {
-  return instance.toObject(vCardStr, encode);
-};
-
-exports.toVcard = function(jsonObj, validAttributes) {
-  return instance.toVcard(jsonObj, validAttributes);
-};
-
-exports.factory = function(options) {
-  return new VCardParser(options);
-};
+module.exports = VCardParser;

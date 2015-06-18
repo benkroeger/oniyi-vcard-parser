@@ -4,6 +4,7 @@
 
 > A vcard to JSON and back parser
 
+also has special handlers for so called extension attributes as well as "complexAttributes", where the value of a vCard field may contain multiple logical values (e.g address --> street, postal code, city)
 
 ## Install
 
@@ -15,11 +16,29 @@ $ npm install --save oniyi-vcard-parser
 ## Usage
 
 ```js
-var oniyi-vcard-parser = require('oniyi-vcard-parser');
+var VCardParser = require('oniyi-vcard-parser');
 
-oniyi-vcard-parser('Rainbow');
+var vcard = new VCardParser({
+	vCardToJSONAttributeMapping: {
+		UID': 'uid',
+    'ADR;WORK': 'workLocation',
+    'AGENT;VALUE=X_PROFILE_UID': false,
+    'CATEGORIES': 'tags'
+	}
+});
+
+var vcardObject = vcard.toObject("my vcard string here");
+
+var vCardString = vcard.toVcard(vcardObject);
+
 ```
 
+## Changelog
+
+0.1.0: 
+	- removed "debug" dependency
+	- removed defaultmappings that were specific for IBM Connections
+	- exporting only a constructor now, no static class methods anymore
 
 ## License
 
