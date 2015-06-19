@@ -1,6 +1,6 @@
 {
   "name": "oniyi-vcard-parser",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A vcard to JSON and back parser",
   "author": {
     "name": "Benjamin Kroeger",

@@ -136,9 +136,9 @@ VCardParser.prototype.toVcard = function(jsonObj, validAttributes) {
     // take only those profile fields that are configured to be editable (information coming from users service document)
     if (validAttributes.indexOf(JSONAttrName) > -1 && _.isString(self._mappings.toVcard[JSONAttrName])) {
       var vCardAttrVal;
-      if (self._complexJSONAttributes[validAttributes]) {
-        var values = _.map(JSONAttrValue, function(val) {
-          return val;
+      if (Array.isArray(self._complexJSONAttributes[JSONAttrName])) {
+        var values = self._complexJSONAttributes[JSONAttrName].map(function(attrName){
+          return JSONAttrValue[attrName] || '';
         });
         vCardAttrVal = values.join(';');
       } else {
