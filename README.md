@@ -20,7 +20,7 @@ var VCardParser = require('oniyi-vcard-parser');
 
 var vcard = new VCardParser({
 	vCardToJSONAttributeMapping: {
-		UID': 'uid',
+		'UID': 'uid',
     'ADR;WORK': 'workLocation',
     'AGENT;VALUE=X_PROFILE_UID': false,
     'CATEGORIES': 'tags'
@@ -36,9 +36,13 @@ var vCardString = vcard.toVcard(vcardObject);
 ## Changelog
 
 0.1.0: 
-	- removed "debug" dependency
-	- removed defaultmappings that were specific for IBM Connections
-	- exporting only a constructor now, no static class methods anymore
+	* removed "debug" dependency
+	* removed defaultmappings that were specific for IBM Connections
+	* exporting only a constructor now, no static class methods anymore
+
+0.2.0:
+	* added two-way parsing for IBM Connections Extension-Attributes
+
 
 ## License
 

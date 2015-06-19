@@ -29,6 +29,12 @@ var defaults = {
   complexJSONAttributes: {}
 };
 
+var extAttrSubvaluesMapping = {
+  'VALUE=X_EXTENSION_KEY': 'key',
+  'VALUE=X_EXTENSION_VALUE': 'value',
+  'VALUE=X_EXTENSION_DATA_TYPE': 'dataType'
+};
+
 function VCardParser(options) {
   options = options || {};
   this._mappings = {};
@@ -95,9 +101,25 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
         if (JSONAttrName === 'extattr') {
           try {
             jsonObj.extattr = jsonObj.extattr || {};
-            var extattrName = vCardRex[2].split(';')[0];
-            var extattrVal = (vCardRex[2].split('X_EXTENSION_VALUE:')[1]).split(';')[0];
-            jsonObj.extattr[extattrName] = (encode) ? encodeURIComponent(extattrVal) : extattrVal;
+            var subValues = vCardRex[2].split(';');
+
+
+
+            var extAttr = {
+              id: subValues.shift(),
+            };
+
+            subValues.forEach(function(subValue) {
+              var keyValPair = subValue.split(':');
+
+              extAttr[extAttrSubvaluesMapping[keyValPair[0]]] = keyValPair[1];
+            });
+
+            if (encode) {
+              extAttr.value = encodeURIComponent(extAttr.value);
+            }
+
+            jsonObj.extattr[extAttr.id] = extAttr;
           } catch (e) {
             debug('Failed to parse extension-attribute: %s', vCardEntry);
           }
@@ -131,21 +153,32 @@ VCardParser.prototype.toVcard = function(jsonObj, validAttributes) {
   // define the vCard beginning
   var vCardArr = ['BEGIN:VCARD', 'VERSION:2.1'];
   validAttributes = Array.isArray(validAttributes) ? validAttributes : _.keys(self._mappings.toVcard);
-  
+
   _.forOwn(jsonObj, function(JSONAttrValue, JSONAttrName) {
     // take only those profile fields that are configured to be editable (information coming from users service document)
     if (validAttributes.indexOf(JSONAttrName) > -1 && _.isString(self._mappings.toVcard[JSONAttrName])) {
       var vCardAttrVal;
       if (Array.isArray(self._complexJSONAttributes[JSONAttrName])) {
-        var values = self._complexJSONAttributes[JSONAttrName].map(function(attrName){
+        var values = self._complexJSONAttributes[JSONAttrName].map(function(attrName) {
           return JSONAttrValue[attrName] || '';
         });
         vCardAttrVal = values.join(';');
+      } else if (JSONAttrName === 'extattr') {
+        _.forOwn(JSONAttrValue, function(extAttr) {
+          vCardArr.push(
+            util.format(
+              'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID:%s;VALUE=X_EXTENSION_KEY:%s;VALUE=X_EXTENSION_VALUE:%s;VALUE=X_EXTENSION_DATA_TYPE:%s',
+              extAttr.id,
+              extAttr.key,
+              _.escape(decodeURIComponent(extAttr.value)),
+              extAttr.dataType));
+        });
+        return false;
       } else {
         vCardAttrVal = JSONAttrValue;
       }
 
-      vCardArr.push(self._mappings.toVcard[JSONAttrName] + ':' + decodeURIComponent(vCardAttrVal).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+      vCardArr.push(self._mappings.toVcard[JSONAttrName] + ':' + _.escape(decodeURIComponent(vCardAttrVal)));
     }
   });
   vCardArr.push('END:VCARD');
