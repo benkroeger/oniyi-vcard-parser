@@ -35,7 +35,7 @@ var vCardString = vcard.toVcard(vcardObject);
 
 ## Changelog
 
-0.1.0: 
+0.1.0:
 	* removed "debug" dependency
 	* removed defaultmappings that were specific for IBM Connections
 	* exporting only a constructor now, no static class methods anymore
@@ -43,6 +43,8 @@ var vCardString = vcard.toVcard(vcardObject);
 0.2.0:
 	* added two-way parsing for IBM Connections Extension-Attributes
 
+1.0.0:
+  * changed extattr to be an array instead of a hash
 
 ## License
 
