@@ -40,7 +40,7 @@ function VCardParser(options) {
   this._mappings = {};
   this._mappings.toJSON = _.merge({}, defaults.vCardToJSONAttributeMapping, options.vCardToJSONAttributeMapping);
   this._complexJSONAttributes = _.merge({}, defaults.complexJSONAttributes, options.complexJSONAttributes);
-  this._mappings.toVcard = _.transform(this._mappings.toJSON, function(result, JSONAttrName, vCardAttrName) {
+  this._mappings.toVcard = _.transform(this._mappings.toJSON, function (result, JSONAttrName, vCardAttrName) {
     if (_.isString(JSONAttrName)) {
       result[JSONAttrName] = vCardAttrName;
     }
@@ -64,7 +64,7 @@ function debug() {
  *
  * @ author: Benjamin Kroeger < benjamin.kroeger@de.ibm.com >
  */
-VCardParser.prototype.toObject = function(vCardStr, encode) {
+VCardParser.prototype.toObject = function (vCardStr, encode) {
   var self = this;
   var jsonObj = {};
   vCardStr = vCardStr.trim();
@@ -72,9 +72,9 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
   var validVCardAttributes = [];
 
   // see if the vCardAttribute starts with one of the configured JSONAttribute-mappings
-  vCardStr.split('\n').forEach(function(vCardLine) {
+  vCardStr.split('\n').forEach(function (vCardLine) {
     var valid = false;
-    _.forOwn(self._mappings.toJSON, function(JSONAttrName, vCardAttrName) {
+    _.forOwn(self._mappings.toJSON, function (JSONAttrName, vCardAttrName) {
       if (vCardLine.indexOf(vCardAttrName) === 0) {
         valid = true;
         if (_.isString(JSONAttrName) && (JSONAttrName.length > 0)) {
@@ -90,7 +90,7 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
   });
 
   // iterate over identified valid vCardAttributes and split them into key / value to create JSON-Object
-  validVCardAttributes.forEach(function(vCardEntry) {
+  validVCardAttributes.forEach(function (vCardEntry) {
     vCardEntry = vCardEntry.trim();
     if (vCardEntry.length > 1) {
       var vCardRex = vCardEntry.match(/^([^:]+):(.*)/);
@@ -100,16 +100,14 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
         // this vCardAttribute is an extension-attribute from IBM Connections
         if (JSONAttrName === 'extattr') {
           try {
-            jsonObj.extattr = jsonObj.extattr || {};
+            jsonObj.extattr = jsonObj.extattr || [];
             var subValues = vCardRex[2].split(';');
-
-
 
             var extAttr = {
               id: subValues.shift(),
             };
 
-            subValues.forEach(function(subValue) {
+            subValues.forEach(function (subValue) {
               var keyValPair = subValue.split(':');
 
               extAttr[extAttrSubvaluesMapping[keyValPair[0]]] = keyValPair[1];
@@ -119,7 +117,7 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
               extAttr.value = encodeURIComponent(extAttr.value);
             }
 
-            jsonObj.extattr[extAttr.id] = extAttr;
+            jsonObj.extattr.push(extAttr);
           } catch (e) {
             debug('Failed to parse extension-attribute: %s', vCardEntry);
           }
@@ -127,7 +125,7 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
           // this vCardAttribute is a complex field
           jsonObj[JSONAttrName] = {};
           var valArray = vCardRex[2].split(';');
-          _.forOwn(self._complexJSONAttributes[JSONAttrName], function(val, i) {
+          _.forOwn(self._complexJSONAttributes[JSONAttrName], function (val, i) {
             jsonObj[JSONAttrName][val] = (encode) ? encodeURIComponent(valArray[i]) : valArray[i];
           });
         } else {
@@ -148,23 +146,23 @@ VCardParser.prototype.toObject = function(vCardStr, encode) {
  *
  * @ author: Benjamin Kroeger < benjamin.kroeger@de.ibm.com >
  */
-VCardParser.prototype.toVcard = function(jsonObj, validAttributes) {
+VCardParser.prototype.toVcard = function (jsonObj, validAttributes) {
   var self = this;
   // define the vCard beginning
   var vCardArr = ['BEGIN:VCARD', 'VERSION:2.1'];
   validAttributes = Array.isArray(validAttributes) ? validAttributes : _.keys(self._mappings.toVcard);
 
-  _.forOwn(jsonObj, function(JSONAttrValue, JSONAttrName) {
+  _.forOwn(jsonObj, function (JSONAttrValue, JSONAttrName) {
     // take only those profile fields that are configured to be editable (information coming from users service document)
     if (validAttributes.indexOf(JSONAttrName) > -1 && _.isString(self._mappings.toVcard[JSONAttrName])) {
       var vCardAttrVal;
       if (Array.isArray(self._complexJSONAttributes[JSONAttrName])) {
-        var values = self._complexJSONAttributes[JSONAttrName].map(function(attrName) {
+        var values = self._complexJSONAttributes[JSONAttrName].map(function (attrName) {
           return JSONAttrValue[attrName] || '';
         });
         vCardAttrVal = values.join(';');
-      } else if (JSONAttrName === 'extattr') {
-        _.forOwn(JSONAttrValue, function(extAttr) {
+      } else if (JSONAttrName === 'extattr' && Array.isArray(JSONAttrValue)) {
+        JSONAttrValue.forEach(function (extAttr) {
           vCardArr.push(
             util.format(
               'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID:%s;VALUE=X_EXTENSION_KEY:%s;VALUE=X_EXTENSION_VALUE:%s;VALUE=X_EXTENSION_DATA_TYPE:%s',
