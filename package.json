@@ -2,35 +2,43 @@
   "name": "oniyi-vcard-parser",
   "version": "1.0.0",
   "description": "A vcard to JSON and back parser",
+  "license": "MIT",
   "author": {
     "name": "Benjamin Kroeger",
     "email": "benjamin.kroeger@gmail.com"
   },
-  "repository": "benkroeger/oniyi-vcard-parser",
-  "license": "MIT",
-  "files": [
-    "index.js"
-  ],
   "keywords": [
     "oniyi-vcard-parser",
     "oniyi",
     "vcard",
     "parser"
   ],
+  "repository": "benkroeger/oniyi-vcard-parser",
+  "scripts": {
+    "format": "prettier-eslint --write \"lib/**/*.js\" \"meta/**/*.js\" \"test/**/*.js\"",
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint-fix": "eslint --fix .",
+    "test": "grunt"
+  },
   "dependencies": {
-    "lodash": "^3.10.1"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-jshint": "^0.11.3",
-    "grunt-contrib-nodeunit": "^0.4.1",
-    "grunt-contrib-watch": "^0.6.1",
-    "load-grunt-tasks": "^3.3.0",
-    "time-grunt": "^1.2.2",
-    "grunt-mocha-cli": "^2.0.0",
-    "jshint-stylish": "^2.1.0"
+    "eslint": "^4.12.1",
+    "eslint-config-oniyi": "^5.0.2",
+    "eslint-plugin-ava": "^4.4.0",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-nodeunit": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-mocha-cli": "^3.0.0",
+    "jshint-stylish": "^2.2.1",
+    "load-grunt-tasks": "^3.5.2",
+    "time-grunt": "^1.4.0",
+    "prettier-eslint-cli": "^4.4.2"
   },
-  "scripts": {
-    "test": "grunt"
-  }
+  "files": [
+    "index.js"
+  ],
+  "main": "lib/index.js"
 }
