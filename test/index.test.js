@@ -11,6 +11,8 @@ test.beforeEach(initContext);
 
 /* Successful scenarios validations */
 
+let vCardObject = {};
+
 test('validate toObject() method, encode not provided', (t) => {
   const {
     vCard,
@@ -23,7 +25,7 @@ test('validate toObject() method, encode not provided', (t) => {
         complexVCard,
       },
       complexJSONAttributes: {
-        fooComplex,
+        complexAttr,
       },
     },
   } = t.context;
@@ -40,21 +42,20 @@ test('validate toObject() method, encode not provided', (t) => {
     buildVCardExtAttr('text', 'I am extension Value'),
     buildVCardExtAttr('date', '2017-01-04T20:32:31.171Z'),
     buildVCardExtAttr('number', 123),
-    buildVCardExtAttr('test'),
     `complexVCard:${complex}`,
     'END:VCARD',
   ].join('\n');
 
-  const vCardObject = vCard.toObject(vCardString);
+  vCardObject = vCard.toObject(vCardString);
 
-  ['fooJson', 'fooBarJson', 'extattr', 'fooComplex'].forEach(item => t.true(item in vCardObject));
+  ['fooJson', 'fooBarJson', 'extattr', 'complexAttr'].forEach(item => t.true(item in vCardObject));
   t.is(vCardObject[fooVCard], foo);
   t.is(vCardObject[fooBarVCard], fooBar);
 
   const { [complexVCard]: complexVCardObject } = vCardObject;
   t.true(_.isPlainObject(complexVCardObject));
 
-  const [complexKey1, complexKey2] = fooComplex;
+  const [complexKey1, complexKey2] = complexAttr;
   const [complexValue1, complexValue2] = complex.split(';');
 
   t.true(complexKey1 in complexVCardObject);
@@ -85,7 +86,7 @@ test('validate toObject() method, encode provided', (t) => {
         complexVCard,
       },
       complexJSONAttributes: {
-        fooComplex,
+        complexAttr,
       },
     },
   } = t.context;
@@ -102,15 +103,14 @@ test('validate toObject() method, encode provided', (t) => {
     'END:VCARD',
   ].join('\n');
 
-  const vCardObject = vCard.toObject(vCardString, true);
-
-  // ['fooJson', 'extattr', 'fooComplex'].forEach(item => t.true(item in vCardObject));
+  const vCardObject = vCard.toObject(vCardString, true); // eslint-disable-line no-shadow
+  ['fooJson', 'extattr', 'complexAttr'].forEach(item => t.true(item in vCardObject));
   t.is(vCardObject[fooVCard], encodeURIComponent(foo));
 
   const { [complexVCard]: complexVCardObject } = vCardObject;
   t.true(_.isPlainObject(complexVCardObject));
 
-  const [complexKey1, complexKey2] = fooComplex;
+  const [complexKey1, complexKey2] = complexAttr;
   const [complexValue1, complexValue2] = complex.split(';');
 
   t.true(complexKey1 in complexVCardObject);
@@ -125,6 +125,34 @@ test('validate toObject() method, encode provided', (t) => {
     t.true(_.isString(id));
     t.true(_.isString(value));
   });
+});
+
+test('validate toVCard() method', (t) => {
+  const { vCard } = t.context;
+  const {
+    extattr,
+    fooJson,
+    fooBarJson,
+    complexAttr,
+  } = vCardObject;
+  const [textObj, dateObj, numberObj] = extattr;
+
+  const vCardStr = vCard.toVcard(vCardObject);
+
+  const vCardArray = vCardStr.split('\n');
+  const [, , textExt, dateExt, numberExt, fooStr, fooBarStr, complexStr] = vCardArray;
+  t.true(textExt.includes(textObj.id));
+  t.true(textExt.includes(textObj.value));
+
+  t.true(dateExt.includes(dateObj.id));
+  t.true(dateExt.includes(dateObj.value));
+
+  t.true(numberExt.includes(numberObj.id));
+  t.true(numberExt.includes(numberObj.value));
+
+  t.is(fooStr.split(':')[1], fooJson);
+  t.is(fooBarStr.split(':')[1], fooBarJson);
+  t.is(complexStr.split(':')[1], _.map(complexAttr, value => value).join(';'));
 });
 
 /* Error / Wrong input scenarios validations */

@@ -13,10 +13,10 @@ const init = () => {
       fooVCard: 'fooJson',
       'fooVCard;barVCard': 'fooBarJson',
       'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID': 'extattr',
-      complexVCard: 'fooComplex',
+      complexVCard: 'complexAttr',
     },
     complexJSONAttributes: {
-      fooComplex: ['Hello', 'test'],
+      complexAttr: ['Hello', 'test'],
     },
   };
   const buildVCardExtAttr = (id, value) => `X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID:${id};VALUE=X_EXTENSION_KEY:;VALUE=X_EXTENSION_VALUE:${value};VALUE=X_EXTENSION_DATA_TYPE:`; // eslint-disable-line max-len
