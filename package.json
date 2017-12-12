@@ -15,26 +15,22 @@
   ],
   "repository": "benkroeger/oniyi-vcard-parser",
   "scripts": {
-    "format": "prettier-eslint --write \"lib/**/*.js\" \"meta/**/*.js\" \"test/**/*.js\"",
+    "format": "prettier-eslint --write \"lib/**/*.js\" \"test/**/*.js\"",
     "lint": "eslint --ignore-path .gitignore .",
     "lint-fix": "eslint --fix .",
-    "test": "grunt"
+    "test": "ava --verbose",
+    "coverage": "nyc npm test && nyc report --reporter=html"
   },
   "dependencies": {
+    "debug": "^3.1.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
+    "ava": "^0.24.0",
     "eslint": "^4.12.1",
     "eslint-config-oniyi": "^5.0.2",
     "eslint-plugin-ava": "^4.4.0",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-nodeunit": "^1.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-mocha-cli": "^3.0.0",
-    "jshint-stylish": "^2.2.1",
-    "load-grunt-tasks": "^3.5.2",
-    "time-grunt": "^1.4.0",
+    "nyc": "^11.3.0",
     "prettier-eslint-cli": "^4.4.2"
   },
   "files": [
