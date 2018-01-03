@@ -1,6 +1,6 @@
 {
   "name": "oniyi-vcard-parser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A vcard to JSON and back parser",
   "license": "MIT",
   "author": "Benjamin Kroeger <benjamin.kroeger@gmail.com>",
