@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "description": "A vcard to JSON and back parser",
   "license": "MIT",
-  "author": {
-    "name": "Benjamin Kroeger",
-    "email": "benjamin.kroeger@gmail.com"
-  },
+  "author": "Benjamin Kroeger <benjamin.kroeger@gmail.com>",
   "keywords": [
     "oniyi-vcard-parser",
     "oniyi",
     "vcard",
     "parser"
   ],
-  "repository": "benkroeger/oniyi-vcard-parser",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benkroeger/oniyi-vcard-parser.git"
+  },
   "scripts": {
     "format": "prettier-eslint --write \"lib/**/*.js\" \"test/**/*.js\"",
     "lint": "eslint --ignore-path .gitignore .",
@@ -34,7 +34,17 @@
     "prettier-eslint-cli": "^4.4.2"
   },
   "files": [
-    "index.js"
+    "lib/"
   ],
-  "main": "lib/index.js"
+  "main": "lib/index.js",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/benkroeger/oniyi-vcard-parser/issues"
+  },
+  "homepage": "https://github.com/benkroeger/oniyi-vcard-parser#readme",
+  "directories": {
+    "test": "test"
+  }
 }
