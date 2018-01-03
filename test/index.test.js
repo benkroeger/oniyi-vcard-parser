@@ -24,9 +24,7 @@ test('validate toObject() method, encode not provided', (t) => {
         'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID': extAttrVCard,
         complexVCard,
       },
-      complexJSONAttributes: {
-        complexAttr,
-      },
+      complexJSONAttributes: { complexAttr },
     },
   } = t.context;
 
@@ -85,9 +83,7 @@ test('validate toObject() method, encode provided', (t) => {
         'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID': extAttrVCard,
         complexVCard,
       },
-      complexJSONAttributes: {
-        complexAttr,
-      },
+      complexJSONAttributes: { complexAttr },
     },
   } = t.context;
 
@@ -130,10 +126,7 @@ test('validate toObject() method, encode provided', (t) => {
 test('validate toVCard() method', (t) => {
   const { vCard } = t.context;
   const {
-    extattr,
-    fooJson,
-    fooBarJson,
-    complexAttr,
+    extattr, fooJson, fooBarJson, complexAttr,
   } = vCardObject;
   const [textObj, dateObj, numberObj] = extattr;
 
@@ -156,4 +149,3 @@ test('validate toVCard() method', (t) => {
 });
 
 /* Error / Wrong input scenarios validations */
-
