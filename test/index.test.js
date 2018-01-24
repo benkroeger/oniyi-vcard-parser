@@ -11,6 +11,9 @@ test.beforeEach(initContext);
 
 /* Successful scenarios validations */
 
+const extAttrPrefix = 'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID';
+const fooBarPrefix = 'fooVCard;barVCard';
+
 let vCardObject = {};
 
 test('validate toObject() method, encode not provided', (t) => {
@@ -20,8 +23,8 @@ test('validate toObject() method, encode not provided', (t) => {
     options: {
       vCardToJSONAttributeMapping: {
         fooVCard,
-        'fooVCard;barVCard': fooBarVCard,
-        'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID': extAttrVCard,
+        [fooBarPrefix]: fooBarVCard,
+        [extAttrPrefix]: extAttrVCard,
         complexVCard,
       },
       complexJSONAttributes: { complexAttr },
@@ -38,6 +41,7 @@ test('validate toObject() method, encode not provided', (t) => {
     `fooVCard:${foo}`,
     `fooVCard;barVCard:${fooBar}`,
     buildVCardExtAttr('text', 'I am extension Value'),
+    buildVCardExtAttr('text2', 'I am extension Value with a \; in the middle'), // eslint-disable-line no-useless-escape
     buildVCardExtAttr('date', '2017-01-04T20:32:31.171Z'),
     buildVCardExtAttr('number', 123),
     `complexVCard:${complex}`,
@@ -45,7 +49,6 @@ test('validate toObject() method, encode not provided', (t) => {
   ].join('\n');
 
   vCardObject = vCard.toObject(vCardString);
-
   ['fooJson', 'fooBarJson', 'extattr', 'complexAttr'].forEach(item => t.true(item in vCardObject));
   t.is(vCardObject[fooVCard], foo);
   t.is(vCardObject[fooBarVCard], fooBar);
@@ -80,7 +83,7 @@ test('validate toObject() method, encode provided', (t) => {
     options: {
       vCardToJSONAttributeMapping: {
         fooVCard,
-        'X_EXTENSION_PROPERTY;VALUE=X_EXTENSION_PROPERTY_ID': extAttrVCard,
+        [extAttrPrefix]: extAttrVCard,
         complexVCard,
       },
       complexJSONAttributes: { complexAttr },
@@ -128,14 +131,17 @@ test('validate toVCard() method', (t) => {
   const {
     extattr, fooJson, fooBarJson, complexAttr,
   } = vCardObject;
-  const [textObj, dateObj, numberObj] = extattr;
+  const [textObj, text2Obj, dateObj, numberObj] = extattr;
 
   const vCardStr = vCard.toVcard(vCardObject);
 
   const vCardArray = vCardStr.split('\n');
-  const [, , textExt, dateExt, numberExt, fooStr, fooBarStr, complexStr] = vCardArray;
+  const [, , textExt, text2Ext, dateExt, numberExt, fooStr, fooBarStr, complexStr] = vCardArray;
   t.true(textExt.includes(textObj.id));
   t.true(textExt.includes(textObj.value));
+
+  t.true(text2Ext.includes(text2Obj.id));
+  t.true(text2Ext.includes(text2Obj.value));
 
   t.true(dateExt.includes(dateObj.id));
   t.true(dateExt.includes(dateObj.value));
